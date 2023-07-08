@@ -9,17 +9,19 @@ import cv2
 from Functions.DetectVideo import DetectVideo
 from Functions.DrawHeat import DrawHeat
 
-path = 'heat.jpg'
+path = "C:\\Users\\yangyikai\\Desktop\\Graduate\\Test\\test2.mp4"
 # Load the image
-image = cv2.imread(path)  # Replace 'your_image_path.jpg' with the actual path to your image
+video = cv2.VideoCapture(path)
+x, y, width, height = 467, 495, 55, 98
+roi = (int(x), int(y), int(width), int(height))
+ret, frame = video.read()
 
+x, y, width, height = roi
+roi_frame = frame[y:y + height, x:x + width]
+
+cv2.rectangle(frame, (x, y), (x + width, y + height), (0, 255, 0), 2)
 # Convert the image to grayscale
-gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-_, thresholded = cv2.threshold(gray_image, 100, 255, cv2.THRESH_BINARY)
 
-cv2.imwrite("thresholded.jpg", thresholded)
-# Get the pixel values of the gray image
-pixel_values = gray_image.flatten()
+cv2.imwrite("thresholded.jpg", frame)
 
-# Print the pixel values
-print(pixel_values)
+

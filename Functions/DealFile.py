@@ -18,3 +18,9 @@ class DealFile:
 
     def setFileName(self, fileName):
         self.fileName = fileName
+
+    def addIndex(self):
+        self.currentIndex += 1
+
+    def resetIndex(self):
+        self.currentIndex = 0

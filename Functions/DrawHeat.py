@@ -13,14 +13,12 @@ from scipy.stats import multivariate_normal
 import queue
 
 COLOUR_ROUTE = (255, 0, 0)
-RADIOS_ROUTE = 30
-DISTANCETHRESHOLD = 10
+RADIOS_ROUTE = 10
+DISTANCETHRESHOLD = 5
 
 class DrawHeat(DrawImg):
     def __init__(self):
         super(DrawHeat, self).__init__()
-        self.queueList = [queue.Queue(), queue.Queue(), queue.Queue(), queue.Queue(), queue.Queue(),
-                          queue.Queue(), queue.Queue(), queue.Queue(), queue.Queue(), queue.Queue()]
 
     def calcutateNormal(self, img, finger, width, height):
         """
@@ -63,10 +61,7 @@ class DrawHeat(DrawImg):
         # Generate mockup data
         h = self.frameSize[1]
         w = self.frameSize[0]
-        # x = np.arange(w)
-        # y = np.arange(h)
-        # X, Y = np.meshgrid(x, y)
-        #pos = np.dstack((X, Y))
+
         zombies = np.ones((int(h), int(w)), np.float64)
 
         for i in range(len(self.drawList)):
@@ -94,71 +89,3 @@ class DrawHeat(DrawImg):
 
         return heatmap
 
-    def isPositionNearThresholded(self, thresholded, x, y, i):
-
-        if thresholded[y, x] == 0:
-            self.queueList[i].put((x, y))
-
-        # Check nearby pixels within the distance threshold
-        y_min = max(0, y - DISTANCETHRESHOLD)
-        y_max = min(thresholded.shape[0] - 1, y + DISTANCETHRESHOLD)
-        x_min = max(0, x - DISTANCETHRESHOLD)
-        x_max = min(thresholded.shape[1] - 1, x + DISTANCETHRESHOLD)
-        nearby_pixels = thresholded[y_min:y_max, x_min:x_max]
-        if np.any(nearby_pixels == 0):
-            self.queueList[i].put((x, y))
-
-    def calculateHot(self, image):
-        """
-            generate in heat zone and out heat zone time list
-
-            :argument image, left finger data, right finger data, which finger to draw
-            :return time start into the zone list, time out into the zone list
-        """
-
-        h = self.frameSize[1]
-        w = self.frameSize[0]
-        img_blank = np.zeros((int(h), int(w), 3), np.uint8)
-        img_blank[:] = [255, 255, 255]
-
-        # Convert the image to grayscale
-        gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-        # Apply a threshold to identify the heavy color areas
-        _, thresholded = cv2.threshold(gray_image, 100, 255, cv2.THRESH_BINARY)
-
-        cv2.imwrite("thresholded.jpg", thresholded)
-
-        for i in range(len(self.drawList)):
-
-            if self.drawList[i]:
-
-                for coordinate in self.route:
-
-                    coordinate = coordinate[i]
-                    self.isPositionNearThresholded(thresholded, coordinate[1], coordinate[2], i)
-
-        for i in range(len(self.drawList)):
-
-            if self.drawList[i]:
-                self.drawRouteHot(self.queueList[i], img_blank)
-
-        return img_blank
-
-    def drawRouteHot(self, queue, img):
-
-        """
-            generate route of heat map
-
-            :argument heap
-            :return img
-        """
-        last_one = queue.get()
-
-        while not queue.empty():
-            this_one = queue.get()
-
-            cv2.line(img, (last_one[0], last_one[1]), (this_one[0], this_one[1]),
-                     COLOUR_ROUTE, RADIOS_ROUTE)
-            last_one = this_one
-
-        return img

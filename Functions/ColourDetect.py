@@ -17,7 +17,7 @@ class ColourDetect():
         self.roisHist = []
         self.frame = None
         self.currentIndex = 0
-        self.term_criteria = (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 10, 1)
+        self.term_criteria = (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 50, 1)
 
     def setCurrentIndex(self, currentIndex):
         self.currentIndex = currentIndex
@@ -31,7 +31,8 @@ class ColourDetect():
 
     def setInitial(self, roi_frame):
 
-        self.roisHist.append(cv2.calcHist([roi_frame], [0], None, [180], [0, 180]))
+        mask = cv2.inRange(roi_frame, np.array((0., 60., 32.)), np.array((180., 255., 255.)))
+        self.roisHist.append(cv2.calcHist([roi_frame], [0], mask, [180], [0, 180]))
         cv2.normalize(self.roisHist[-1], self.roisHist[-1], 0, 255, cv2.NORM_MINMAX)
 
     def colourDetectSimple(self):
@@ -42,15 +43,13 @@ class ColourDetect():
         back_proj = cv2.calcBackProject([hsv], [0], self.roisHist[self.currentIndex], [0, 180], 1)
 
         # Apply CamShift to track the object
-        ret, self.roi[self.currentIndex] = cv2.CamShift(back_proj, (x, y, width, height), self.term_criteria)
+        ret, self.roi[self.currentIndex] = cv2.meanShift(back_proj, (x, y, width, height), self.term_criteria)
 
         if self.roi[self.currentIndex] is not None:
             # Get the center of the track_window
             center_x = int(self.roi[self.currentIndex][0] + self.roi[self.currentIndex][2] / 2)
             center_y = int(self.roi[self.currentIndex][1] + self.roi[self.currentIndex][3] / 2)
 
-            # Print the center coordinates
-            print("Center coordinates: ({}, {})".format(center_x, center_y))
             return self.roi[self.currentIndex]
         else:
 

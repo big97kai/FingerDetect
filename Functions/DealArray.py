@@ -17,7 +17,11 @@ class DealArray(DealFile):
         self.filesName = []
 
     def addCurrentIndex(self):
-        self.currentFile += 1
+
+        if self.currentIndex != len(self.filesPath)-1:
+            self.currentIndex += 1
+        else:
+            self.currentIndex = 0
 
     def addFile(self, file):
         self.filesPath.append(file)
@@ -43,9 +47,16 @@ class DealArray(DealFile):
         for filename in os.listdir(directory):
             file_path = os.path.join(directory, filename)
             if os.path.isfile(file_path) and self.isVideoFile(file_path):
-                self.filesPath.append(file_path)
+
+                list = self.changeFile(file_path)
+                self.filesPath.append(list)
             else:
-                self.clearFiles()
+                self.clearFile()
                 return []
 
         return self.filesPath
+
+    def changeFile(self, file):
+
+        list = file.split("\\")
+        return list[0] + "/" + list[1]

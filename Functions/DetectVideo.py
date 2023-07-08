@@ -4,6 +4,7 @@
     @Date:2022/12/31
     @Desc:Null
 """
+import time
 
 import cv2
 
@@ -40,9 +41,11 @@ class DetectVideo:
             :argument frame, last frame finger position, finger list to detect
             :return img with route, current frame finger position
         """
+        # Record the start time
+        start_time = time.time()
         # standard code to output video
         cap = cv2.VideoCapture(self.path)
-
+        print(self.path)
         # set frame width and height
         frame_height = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
         frame_width = cap.get(cv2.CAP_PROP_FRAME_WIDTH)
@@ -55,18 +58,22 @@ class DetectVideo:
         out = cv2.VideoWriter(OUTPUT_PATH, fourcc, fps, (int(frame_size[0]), int(frame_size[1])), True)
         trajectory = []
 
-        single_frame = None
+        success_time = 0
+        frame_time = 1
         # deal every frame
+
         while (cap.isOpened()):
 
             success, frame = cap.read()
-
+            print(success)
             if not success:
                 break
 
             # try:
-            single_frame, last_list = self.process_frame_origin(frame, trajectory)
-
+            right, single_frame, last_list = self.process_frame_origin(frame, trajectory)
+            frame_time += 1
+            if right:
+                success_time += 1
             trajectory.append(last_list)
 
             # except:
@@ -76,10 +83,18 @@ class DetectVideo:
             if success:
                 out.write(single_frame)
 
+
         cv2.destroyAllWindows()
         out.release()
         cap.release()
-        return OUTPUT_PATH, trajectory, frame_size
+        # Record the end time
+        end_time = time.time()
+
+        # Calculate the running time
+        running_time = end_time - start_time
+        detect_rate = success_time / frame_time
+
+        return OUTPUT_PATH, trajectory, frame_size, running_time, detect_rate
 
     def process_frame_origin(self, img, trajectory):
         """
@@ -92,11 +107,11 @@ class DetectVideo:
         # uese mediepipe to detect image
         h, w = img.shape[0], img.shape[1]
         point_list = []
-
+        right = None
         if self.model.modelIndex == 1:
 
             self.model.model.setFrame(img)
-            this_point = None
+
             currentTracker = 0
             for finger_index in range(len(self.drawList)):
 
@@ -111,11 +126,14 @@ class DetectVideo:
                     cv2.rectangle(img, (x, y), (x + width, y + height), (0, 255, 0), 2)
                     x = int(track_window[0] + track_window[2] / 2)
                     y = int(track_window[1] + track_window[3] / 2)
+
                     if x != -1:
                         this_point = [finger_index, x, y]
+                        right = True
                     else:
-
+                        right = False
                         if len(trajectory) == 0:
+                            currentTracker += 1
                             continue
                         else:
                             this_point = trajectory[len(trajectory) - 1][finger_index]
@@ -138,7 +156,7 @@ class DetectVideo:
             results = self.model.model.hands.process(img_RGB)
             # collect data and generate route
             if results.multi_hand_landmarks and len(results.multi_handedness) == 2:
-
+                right = True
                 for hand_landmarks in range(len(results.multi_hand_landmarks)):
 
                     for i in [4, 8, 12, 16, 20]:
@@ -158,9 +176,10 @@ class DetectVideo:
 
                         if self.drawList[int(hand_landmarks * 5 + i / 4 - 1)]:
                             img = self.draw_image(trajectory, this_point, int(hand_landmarks * 5 + i / 4 - 1), img)
-
+            else:
+                right = False
             img = cv2.flip(img, 1)
-        return img, point_list
+        return right, img, point_list
 
     def draw_image(self, trajectory, this_point, finger_index, img):
         """

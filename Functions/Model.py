@@ -14,7 +14,6 @@ from Functions.MediaPipe import MediaPipe
 class Model():
     def __init__(self):
         self.model = None
-
         self.modelIndex = 0
         self.firstFrame = None
         self.trackerSize = 0
@@ -31,11 +30,12 @@ class Model():
             self.model = ColourDetect()
 
     def setRoiInist(self, Rois):
-
-        print(Rois)
+        len = 1
         for roi in Rois:
             if roi[0] != -1:
                 self.model.setRoi(roi)
                 x, y, width, height = roi
-                roi_frame = self.firstFrame[y:y + height, x:x + width]
+                roi_frame = self.firstFrame[y:y + height, x:x+width]
                 self.model.setInitial(roi_frame)
+                cv2.imwrite(str(len) + ".jpg", roi_frame)
+                len += 1

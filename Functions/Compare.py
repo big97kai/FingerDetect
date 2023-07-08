@@ -4,8 +4,7 @@
     @Date:2023/5/22
     @Desc:Null
 '''
-from PySide6.QtCharts import QLineSeries, QtCharts, QChart
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.backends.backend_template import FigureCanvas
 from matplotlib.figure import Figure
 
 
@@ -15,18 +14,6 @@ class Compare():
         self.secondModelTime = []
         self.firstCorretRate = []
         self.secondCorrenctRate = []
-
-    def getFirstModelTime(self):
-        return self.firstModelTime
-
-    def getSocondModelTime(self):
-        return self.secondModelTime
-
-    def getFirstCorrectRate(self):
-        return self.firstCorretRate
-
-    def getSecondCorrentRate(self):
-        return self.secondCorrenctRate
 
     def addFirstModelTime(self, time):
         self.firstModelTime.append(time)
@@ -48,58 +35,34 @@ class Compare():
 
     def createPlot(self, boole):
 
-        chart = QChart()
-        series_1 = QLineSeries()
-        series_2 = QLineSeries()
-        times = 0
-        max_y1 = 0
-        max_y2 = 0
-        first_series = None
-        second_series = None
+        figure = Figure()
+
+        x = None
+
         if boole:
-            first_series = self.firstModelTime
-            second_series = self.secondModelTime
-            chart.setTitle("Model Time.")
+            x = range(len(self.firstModelTime))
 
+            subplot1 = figure.add_subplot(1, 2, 1)
+            subplot2 = figure.add_subplot(1, 2, 2)  # 1 row, 2 columns, subplot index 2
+
+
+            subplot1.plot(x, self.firstModelTime, label='FirstModel')
+            subplot2.plot(x, self.secondModelTime, label='SecondModel')
+            # Set labels and title
+            subplot1.set_xlabel('file')
+            subplot1.set_ylabel('time')
         else:
-            first_series = self.firstCorretRate
-            second_series = self.secondCorrenctRate
-            chart.setTitle("Mode Correct Rate.")
+            x = range(len(self.firstCorretRate))
 
-        for plot in first_series:
-            series_1.append((times, plot))
-            max_y1 = max(plot, max_y1)
-            times += 1
+            subplot1 = figure.add_subplot(1, 2, 1)
+            subplot2 = figure.add_subplot(1, 2, 2)  # 1 row, 2 columns, subplot index 2
 
-        times = 0
-        for plot in second_series:
-            series_2.append((times, plot))
-            max_y2 = max(plot, max_y2)
-            times += 1
+            subplot1.plot(x, self.firstCorretRate, label='FirstModel')
+            subplot2.plot(x, self.secondCorrenctRate, label='SecondModel')
+            # Set labels and title
+            subplot1.set_xlabel('file')
+            subplot1.set_ylabel('rate')
 
-        chart.addSeries(series_1)
-        chart.addSeries(series_2)
-        # Create the X-axis
-        # Create the X-axis
-        axisX = QtCharts.QValueAxis()
-        axisX.setRange(0, times)  # Set the range for the X-axis
-        chart.addAxis(axisX, QtCharts.QtOrientation.Horizontal)  # Attach X-axis to the chart
-        series_1.attachAxis(axisX)  # Attach X-axis to series1
-        series_2.attachAxis(axisX)  # Attach X-axis to series2
+        canvas = FigureCanvas(figure)
 
-        # Create the Y-axis for series1
-        axisY1 = QtCharts.QValueAxis()
-        axisY1.setRange(0, max_y1)  # Set the range for the Y-axis of series1
-        chart.addAxis(axisY1, QtCharts.QtOrientation.Vertical)  # Attach Y-axis to the chart
-        series_1.attachAxis(axisY1)  # Attach Y-axis to series1
-
-        # Create the Y-axis for series2
-        axisY2 = QtCharts.QValueAxis()
-        axisY2.setRange(0, max_y2)  # Set the range for the Y-axis of series2
-        chart.addAxis(axisY2, QtCharts.QtOrientation.Vertical)  # Attach Y-axis to the chart
-        series_2.attachAxis(axisY2)  # Attach Y-axis to series2
-
-        # Create a QChartView to display the chart
-        chart_view = QtCharts.QChartView(chart)
-
-        return chart_view
+        return canvas

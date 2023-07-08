@@ -5,13 +5,17 @@
 ########################################################################
 ## IMPORTS
 ########################################################################
+import copy
 import os
 import sys
 ########################################################################
 # IMPORT GUI FILE
+from asyncio import Queue
+
 import cv2
 from PIL import Image, ImageQt
 
+from Functions.DealArray import DealArray
 from Functions.Functions import Functions
 from ui_interface import *
 
@@ -19,6 +23,7 @@ from PySide6.QtCore import Slot, QStandardPaths, QUrl, QDir
 from PySide6.QtGui import QPixmap, QKeySequence, QIcon, QPen
 from PySide6.QtMultimedia import QAudioOutput, QMediaPlayer, QMediaFormat
 from PySide6.QtWidgets import QMainWindow, QApplication, QFileDialog, QDialog, QStyle, QSlider, QListWidgetItem
+from PySide6.QtCharts import QChart, QChartView, QLineSeries, QValueAxis
 
 ########################################################################
 
@@ -141,24 +146,24 @@ class MainWindow(QMainWindow):
         if self.functions.state == 0:
             self.ui.alreadyMapBtn.setEnabled(False)
             self.ui.hotMapBtn.setEnabled(False)
-            self.ui.hotMapRouteBtn.setEnabled(False)
+            self.ui.tacleFixationRouteBtn.setEnabled(False)
             self.ui.handSettingBtn.setEnabled(False)
             self.ui.modelCompareBtn.setEnabled(False)
             self.ui.modelSettingBtn.setEnabled(False)
-            self.ui.tacicleFixationBtn.setEnabled(False)
+            self.ui.tacleFixationBtn.setEnabled(False)
         elif self.functions.state == 1:
             self.ui.modelSettingBtn.setEnabled(True)
             self.ui.handSettingBtn.setEnabled(True)
             self.ui.alreadyMapBtn.setEnabled(False)
             self.ui.hotMapBtn.setEnabled(False)
-            self.ui.hotMapRouteBtn.setEnabled(False)
+            self.ui.tacleFixationRouteBtn.setEnabled(False)
             self.ui.modelCompareBtn.setEnabled(False)
-            self.ui.tacicleFixationBtn.setEnabled(False)
+            self.ui.tacleFixationBtn.setEnabled(False)
         elif self.functions.state == 2:
             self.ui.already.setEnabled(True)
             self.ui.hot.setEnabled(True)
         elif self.functions.state == 3:
-            self.ui.hotRoute.setEnabled(True)
+            self.ui.tacleFixationRouteBtn.setEnabled(True)
             self.ui.tacle.setEnabled(True)
 
     def setUpToolBar(self):
@@ -216,9 +221,8 @@ class MainWindow(QMainWindow):
 
         self.ui.hot.clicked.connect(self.img_hot_map)
         self.ui.already.clicked.connect(self.img_already)
-        self.ui.hotRoute.clicked.connect(self.img_hot_route)
+        self.ui.tacleRoute.clicked.connect(self.img_tackel_route)
         self.ui.tacle.clicked.connect(self.img_tackel)
-        self.ui.compare.clicked.connect(self.img_compare)
 
     def setUpLeftBtn(self):
 
@@ -226,13 +230,13 @@ class MainWindow(QMainWindow):
 
         self.ui.playerBtn.clicked.connect(self.change_page_first)
 
-        self.ui.hotMapRouteBtn.clicked.connect(self.change_page_hot_route)
+        self.ui.tacleFixationRouteBtn.clicked.connect(self.change_page_hot_route)
 
         self.ui.hotMapBtn.clicked.connect(self.change_page_hot)
 
         self.ui.handSettingBtn.clicked.connect(self.change_page_hand_setting)
 
-        self.ui.tacicleFixationBtn.clicked.connect(self.change_page_tactile)
+        self.ui.tacleFixationBtn.clicked.connect(self.change_page_tactile)
 
         self.ui.modelCompareBtn.clicked.connect(self.change_page_compare)
 
@@ -246,10 +250,10 @@ class MainWindow(QMainWindow):
             self.ui.alreadyMapBtn.setStyleSheet("background-color: #27263c;")
         elif name == 2:
             self.ui.hotMapBtn.setStyleSheet("background-color: #27263c;")
-        elif name == 3:
-            self.ui.hotMapRouteBtn.setStyleSheet("background-color: #27263c;")
         elif name == 4:
-            self.ui.tacicleFixationBtn.setStyleSheet("background-color: #27263c;")
+            self.ui.tacleFixationRouteBtn.setStyleSheet("background-color: #27263c;")
+        elif name == 3:
+            self.ui.tacleFixationBtn.setStyleSheet("background-color: #27263c;")
         elif name == 5:
             self.ui.modelCompareBtn.setStyleSheet("background-color: #27263c;")
         elif name == 6:
@@ -277,20 +281,20 @@ class MainWindow(QMainWindow):
 
     def change_page_hot_route(self):
         self.unchange_btn(self.functions.currentPage)
-        self.functions.setCurrentPage(3)
-        self.ui.hotMapRouteBtn.setStyleSheet("font-weight:bold; background-color: #1b1b27;")
+        self.functions.setCurrentPage(4)
+        self.ui.tacleFixationRouteBtn.setStyleSheet("font-weight:bold; background-color: #1b1b27;")
         self.ui.mainPages.setCurrentIndex(self.functions.currentPage)
 
     def change_page_tactile(self):
         self.unchange_btn(self.functions.currentPage)
-        self.functions.setCurrentPage(5)
-        self.ui.modelCompareBtn.setStyleSheet("font-weight:bold; background-color: #1b1b27;")
+        self.functions.setCurrentPage(3)
+        self.ui.tacleFixationBtn.setStyleSheet("font-weight:bold; background-color: #1b1b27;")
         self.ui.mainPages.setCurrentIndex(self.functions.currentPage)
 
     def change_page_compare(self):
         self.unchange_btn(self.functions.currentPage)
-        self.functions.setCurrentPage(4)
-        self.ui.tacicleFixationBtn.setStyleSheet("font-weight:bold; background-color: #1b1b27;")
+        self.functions.setCurrentPage(5)
+        self.ui.modelCompareBtn.setStyleSheet("font-weight:bold; background-color: #1b1b27;")
         self.ui.mainPages.setCurrentIndex(self.functions.currentPage)
 
     def change_page_model_setting(self):
@@ -307,19 +311,25 @@ class MainWindow(QMainWindow):
 
     def get_files(self):
 
+        self.functions.alreadyDone = []
         self.functions.setIsArray(True)
         self._ensure_stopped()
-        self.functions.dealFile.clearFile()
-        files_dialog = QFileDialog(self)
+        self.functions.dealFile = DealArray()
 
+        files_dialog = QFileDialog(self)
+        self.ui.listWidget.clear()
         dir_path = files_dialog.getExistingDirectory(None, "Select Directory", "/path/to/default/directory")
         files_list = self.functions.dealFile.getFileLocations(dir_path)
 
         if not len(files_list) == 0:
             for file_location in files_list:
+
                 file_name = os.path.basename(file_location)
                 list_item = QListWidgetItem(file_name)
+
                 self.ui.listWidget.addItem(list_item)
+                self.ui.modelSettingBtn.setEnabled(True)
+                self.ui.handSettingBtn.setEnabled(True)
         else:
             self.show_status_message("no valid files")
 
@@ -334,6 +344,7 @@ class MainWindow(QMainWindow):
             self.ui.skipBtn.setEnabled(False)
             self.ui.fingerLabel.setText("Finish choosing colour!")
             self.functions.detectVideo.model.setRoiInist(self.functions.Rois)
+            self.ui.begin.setEnabled(True)
 
     def skip_finger(self):
 
@@ -346,6 +357,7 @@ class MainWindow(QMainWindow):
             self.ui.skipBtn.setEnabled(False)
             self.ui.fingerLabel.setText("Finish choosing colour!")
             self.functions.detectVideo.model.setRoiInist(self.functions.Rois)
+            self.ui.begin.setEnabled(True)
 
     def change_finger_label(self):
         if self.functions.currentFinger <= 8:
@@ -357,11 +369,13 @@ class MainWindow(QMainWindow):
             select prefer model by the player, default is MediaPipe
         """
         if self.ui.mediaPipe.isChecked():
+            self.functions.setModelIndex(0)
             self.functions.detectVideo.model.setModelIndex(0)
             self.closeFrontFrame()
             self.ui.skipBtn.setEnabled(False)
             self.ui.nextFingerBtn.setEnabled(False)
         else:
+            self.functions.setModelIndex(1)
             self.functions.detectVideo.model.setModelIndex(1)
             self.open_first_frame()
             self.ui.skipBtn.setEnabled(True)
@@ -396,7 +410,6 @@ class MainWindow(QMainWindow):
             y /= ratio_x
             w /= ratio_x
             h /= ratio_x
-
             self.functions.setRoi(self.functions.currentFinger, (int(x), int(y), int(w), int(h)))
 
             self.show_pic(self.first_frame, 3)
@@ -416,7 +429,6 @@ class MainWindow(QMainWindow):
             image_pos = QPoint(pos.x(), pos.y() - (label_rect.height() - pixmap_rect.height()) / 2)
         else:
             image_pos = QPoint(pos.x() - (label_rect.width() - pixmap_rect.width()) / 2, pos.y())
-        print(image_pos)
         return image_pos
 
     def paintEvent(self, event):
@@ -434,10 +446,9 @@ class MainWindow(QMainWindow):
 
             self.ui.frontMap.setPixmap(self.modified_pixmap)
 
-
     def open_first_frame(self):
 
-        video = cv2.VideoCapture(self.functions.dealFile.currentFile.toString())
+        video = cv2.VideoCapture(self.functions.dealFile.currentFile)
 
         ret, frame = video.read()
 
@@ -466,6 +477,8 @@ class MainWindow(QMainWindow):
         self.functions.drawings.setAlready(self.already_pic)
         self.show_pic(self.already_pic, 0)
         self.ui.alreadyMapBtn.setEnabled(True)
+        if self.functions.drawings.saveAlready:
+            self.functions.drawAlready.saveImg(self.functions.prePath, self.already_pic)
 
     def img_hot_map(self):
         """
@@ -480,33 +493,86 @@ class MainWindow(QMainWindow):
         self.show_pic(self.heat_map, 1)
         self.ui.hotMapBtn.setEnabled(True)
 
+        if self.functions.drawings.saveHot:
+            self.functions.drawHeat.saveImg(self.functions.prePath, self.heat_map)
+
         self.functions.changeState()
         self.changeState()
 
-    def img_hot_route(self):
+    def img_tackel_route(self):
 
-        self.heat_route = self.functions.drawHeat.calculateHot(self.functions.drawings.hotMapPic)
-        self.show_pic(self.heat_route, 2)
-        self.ui.hotMapRouteBtn.setEnabled(True)
+        self.functions.drawTacle.setFileName(self.get_new_file_name('tacle_route'))
+        self.tackle_route = self.functions.drawTacle.drawHeatRoute()
+        self.show_pic(self.tackle_route, 5)
+        self.ui.tacleFixationRouteBtn.setEnabled(True)
+
+        if self.functions.drawings.saveTacleFixation:
+            self.functions.drawTacle.saveImg(self.functions.prePath, self.tackle_route)
 
     def img_tackel(self):
 
+        self.functions.drawTacle.setDrawList(self.functions.fingerList)
         self.functions.drawTacle.setFrameSize(self.functions.frameSize)
+        self.functions.drawTacle.setRoute(self.functions.routeList[self.functions.dealFile.currentIndex])
+        self.tacle = self.functions.drawTacle.getTacleImg()
+        self.copy_queue(self.functions.drawTacle.queueList)
         self.functions.drawHeat.setFileName(self.get_new_file_name('tacle'))
-        self.functions.drawTacle.addImgList(self.functions.drawings.hotMapPic)
-        self.tackle_pic = self.functions.drawTacle.getTacleImg()
-        self.show_pic(self.tackle_pic, 4)
-        self.ui.tacicleFixationBtn.setEnabled(True)
+        self.show_pic(self.tacle, 4)
+        self.ui.tacleFixationBtn.setEnabled(True)
+        self.ui.tacleRoute.setEnabled(True)
 
-    def img_compare(self):
-        pass
+        if self.functions.drawings.saveHotRoute:
+            self.functions.drawTacle.saveImg(self.functions.prePath, self.tacle)
+
+    def copy_queue(self, queueList):
+        list = []
+        for queue in queueList:
+            copiedList = []
+            items = []
+            while not queue.empty():
+                item = queue.get()
+                copiedList.append(item)
+                items.append(item)
+            for item in items:
+                queue.put(item)
+            list.append(copiedList)
+        print("firstList")
+        print(list)
+
+        for fingerIndex in range(len(list)):
+
+            if list[fingerIndex]:
+
+                for item in list[fingerIndex]:
+
+                    self.functions.drawTacleList.addPointToList(fingerIndex, item)
+
+    def img_list_tackel(self):
+        self.functions.drawTacleList.setFrameSize(self.functions.frameSize)
+        self.functions.drawTacleList.setFileName(self.get_new_file_name('final_tacle'))
+        self.functions.drawTacleList.setDrawList(self.functions.fingerList)
+        self.tackle_pic = self.functions.drawTacleList.checkIfNear()
+        if self.functions.detectVideo.model.modelIndex == 0:
+            self.show_pic(self.tackle_pic, 7)
+        else:
+            self.show_pic(self.tackle_pic, 8)
+
 
     def show_pic(self, map, name):
+
+        if name == 7:
+            label_size = self.ui.frame_10.size()
+            qimg = QPixmap.fromImage(ImageQt.ImageQt(Image.fromarray(map, mode='RGB'))).scaled(label_size, Qt.KeepAspectRatio)
+            self.ui.firstModelOutcome.setPixmap(qimg)
+        elif name == 8:
+            label_size = self.ui.frame_9.size()
+            qimg = QPixmap.fromImage(ImageQt.ImageQt(Image.fromarray(map, mode='RGB'))).scaled(label_size, Qt.KeepAspectRatio)
+            self.ui.secondModelOutcome.setPixmap(qimg)
 
         qimg = None
         if name != 3:
             label_size = self.ui.alreadyMapPage.size()
-            qimg = QPixmap.fromImage(ImageQt.ImageQt(Image.fromarray(map))).scaled(label_size, Qt.KeepAspectRatio)
+            qimg = QPixmap.fromImage(ImageQt.ImageQt(Image.fromarray(map, mode='RGB'))).scaled(label_size, Qt.KeepAspectRatio)
 
         if name == 0:
             self.ui.alreadyMap.setPixmap(qimg)
@@ -522,6 +588,8 @@ class MainWindow(QMainWindow):
             self.functions.setFrameSize((size.width(), size.height()))
         elif name == 4:
             self.ui.tacleMap.setPixmap(qimg)
+        elif name == 5:
+            self.ui.hotMapRoute.setPixmap(qimg)
 
     # 关闭
     def closeEvent(self, event):
@@ -582,6 +650,9 @@ class MainWindow(QMainWindow):
         else:
             self.functions.setFingerList(9, False)
 
+        if self.functions.testFingerList():
+            self.ui.begin.setEnabled(True)
+
     @Slot()
     def open(self):
         """
@@ -611,7 +682,8 @@ class MainWindow(QMainWindow):
         if file_dialog.exec() == QDialog.Accepted:
             url = file_dialog.selectedUrls()[0]
 
-            self.functions.dealFile.setCurrentFile(url)
+            self.functions.dealFile.setCurrentFile(url.toString())
+
             self._playlist.append(url)
             self._playlist_index = len(self._playlist) - 1
 
@@ -635,7 +707,9 @@ class MainWindow(QMainWindow):
             self._player.setPosition(0)
 
     def generate_new_path(self):
-        path = self.functions.dealFile.currentFile.toString().split('/')
+
+        path = self.functions.dealFile.currentFile.split('/')
+
         new_path = ''
         name = ''
         for i in range(len(path)):
@@ -647,6 +721,7 @@ class MainWindow(QMainWindow):
             else:
                 new_path += path[i]
                 name = path[i]
+
         return new_path, name
 
     def generate_new_url(self):
@@ -673,25 +748,137 @@ class MainWindow(QMainWindow):
     @Slot()
     def generate(self, bath):
 
+        self.functions.setHasUsedModel(self.functions.modelIndex)
         if not bath:
             newPath, newName = self.generate_new_path()
             current_path = self.generate_new_url()
             self.functions.detectVideo.setPath(newPath)
             self.functions.detectVideo.setDrawList(self.functions.fingerList)
-            new_url, route, frame_size = self.functions.detectVideo.generate_video()
+            new_url, route, frame_size, _, _ = self.functions.detectVideo.generate_video()
             current_path += new_url
-
+            print(current_path)
             self.functions.dealFile.setFileName(newName)
-            self.functions.dealFile.setCurrentFile(current_path)
             self.functions.addRoute(route)
             self.functions.setFrameSize(frame_size)
             self.set_up_new_play(current_path)
         else:
-            
-            new_url, route, frame_size = self.functions.detectVideo.generate_video()
-            self.functions.dealFile.setCurrentFile(new_url)
+            self.generateFiles()
+
+    def generateFilesPosition(self):
+        name = self.functions.dealFile.currentFile.split("/")
+        return name[len(name) - 1]
+
+    def generateFiles(self):
+
+        self.functions.detectVideo.setDrawList(self.functions.fingerList)
+        for index in range(len(self.functions.dealFile.filesPath)):
+
+            self.functions.dealFile.setCurrentFile(self.functions.dealFile.filesPath[self.functions.dealFile.currentIndex])
+            newName = self.generateFilesPosition()
+            self.functions.dealFile.setFileName(newName)
+            self.functions.detectVideo.setPath(self.functions.dealFile.currentFile)
+            new_url, route, frame_size, running_time, detect_rate = self.functions.detectVideo.generate_video()
+
             self.functions.addRoute(route)
             self.functions.setFrameSize(frame_size)
+            self.dealWithImages()
+            self.functions.dealFile.addCurrentIndex()
+
+            if self.functions.detectVideo.model.modelIndex == 0:
+                self.functions.compare.addFirstModelTime(running_time)
+                self.functions.compare.addFirstCorrectRate(detect_rate)
+
+            else:
+                self.functions.compare.addSocondModelTime(running_time)
+                self.functions.compare.addSecondCorrentRate(detect_rate)
+
+        self.img_list_tackel()
+        self.functions.setTacle(self.functions.modelIndex, self.tackle_pic)
+
+        if not self.functions.alreadyDone:
+            self.functions.alreadyDone = self.functions.fingerList
+        else:
+            if self.functions.testTwoModelFingerList and self.functions.testAllModel():
+                self.ui.modelCompareBtn.setEnabled(True)
+                self.compare()
+
+        self.functions.routeList = []
+
+
+    def dealWithImages(self):
+
+        self.img_tackel()
+        if self.functions.drawings.saveAlready:
+            self.img_already()
+        elif self.functions.drawings.saveHot:
+            self.img_hot_map()
+        elif self.functions.drawings.saveHotRoute:
+            self.img_tackel_route()
+
+    def compare(self):
+
+        ratelayout = QVBoxLayout(self.ui.compareRate)
+        timelayout = QVBoxLayout(self.ui.compareTime)
+
+        firstTimeSeries = QLineSeries()
+        firstTimeSeries.setName("Mediapipe")
+        secondTimeSeries = QLineSeries()
+        secondTimeSeries.setName("meanshift")
+        firstRateSeries = QLineSeries()
+        firstRateSeries.setName("Mediapipe")
+        secondRateSeries = QLineSeries()
+        secondRateSeries.setName("meanshift")
+
+        for index in range(len(self.functions.compare.firstModelTime)):
+
+            firstTimeSeries.append(index, self.functions.compare.firstModelTime[index])
+
+        for index in range(len(self.functions.compare.secondModelTime)):
+            secondTimeSeries.append(index, self.functions.compare.secondModelTime[index])
+
+        for index in range(len(self.functions.compare.firstCorretRate)):
+            firstRateSeries.append(index, self.functions.compare.firstCorretRate[index])
+
+        for index in range(len(self.functions.compare.secondCorrenctRate)):
+            secondRateSeries.append(index, self.functions.compare.secondCorrenctRate[index])
+
+        self.rateChart = QChart()
+        self.timeChart = QChart()
+
+        # x_axis = QValueAxis()
+        # x_axis.setTitleText("File")
+        # self.timeChart.addAxis(x_axis, Qt.AlignBottom)
+        # self.rateChart.addAxis(x_axis, Qt.AlignBottom)
+        #
+        # y1_axis = QValueAxis()
+        # y1_axis.setTitleText("Coorect Rate")
+        #
+        # y2_axis = QValueAxis()
+        # y2_axis.setTitleText("Time ms")
+        # self.timeChart.addAxis(y2_axis, Qt.AlignLeft)
+        # self.rateChart.addAxis(y1_axis, Qt.AlignLeft)
+
+        self.timeChart.legend().setVisible(True)
+        self.timeChart.addSeries(firstTimeSeries)
+        self.timeChart.addSeries(secondTimeSeries)
+        self.timeChart.createDefaultAxes()
+        self.timeChart.setTitle("Time used Compare")
+
+        self.time_chart_view = QChartView(self.timeChart)
+        self.time_chart_view.setRenderHint(QPainter.Antialiasing)
+        timelayout.addWidget(self.time_chart_view)
+
+        self.rateChart.legend().setVisible(True)
+        self.rateChart.addSeries(firstRateSeries)
+        self.rateChart.addSeries(secondRateSeries)
+        self.rateChart.createDefaultAxes()
+        self.rateChart.setTitle("Rate Compare")
+
+        self.rate_chart_view = QChartView(self.rateChart)
+        self.rate_chart_view.setRenderHint(QPainter.Antialiasing)
+        ratelayout.addWidget(self.rate_chart_view)
+
+
 
     @Slot()
     def next_clicked(self):
@@ -718,14 +905,21 @@ class MainWindow(QMainWindow):
         self.show_status_message(error_string)
 
     def save_file(self):
-        options = QFileDialog.Options()
-        options |= QFileDialog.DontUseNativeDialog
-        file_path, _ = QFileDialog.getSaveFileName(
-            None, "Save File", "", "All Files (*);;Text Files (*.txt)", options=options
-        )
-        if file_path:
+        file_dialog = QFileDialog()
+        file_dialog.setWindowTitle("Select Folder to Save Image")
+        file_dialog.setAcceptMode(QFileDialog.AcceptOpen)  # Set the dialog to open mode
+        file_dialog.setFileMode(QFileDialog.Directory)  # Set the file dialog to select directories
 
-            self.functions.setFilePath(file_path)
+        if file_dialog.exec():
+            selected_folder = file_dialog.selectedFiles()[0]
+            print("Selected folder:", selected_folder)
+
+            # Assuming you have the image data in the 'image' variable
+            self.functions.setSaveFilePath(selected_folder)
+            print("Image saved successfully.")
+        else:
+            print("Folder selection canceled.")
+
 
 ########################################################################
 ## EXECUTE APP

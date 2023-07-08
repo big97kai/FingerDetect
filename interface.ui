@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>797</width>
-    <height>471</height>
+    <width>913</width>
+    <height>575</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -47,7 +47,7 @@ QPushButton{
 }</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout">
+   <layout class="QGridLayout" name="gridLayout_3">
     <property name="leftMargin">
      <number>0</number>
     </property>
@@ -60,7 +60,7 @@ QPushButton{
     <property name="bottomMargin">
      <number>0</number>
     </property>
-    <item>
+    <item row="0" column="0">
      <widget class="QWidget" name="header" native="true">
       <layout class="QHBoxLayout" name="horizontalLayout">
        <property name="spacing">
@@ -78,7 +78,7 @@ QPushButton{
        <property name="bottomMargin">
         <number>0</number>
        </property>
-       <item alignment="Qt::AlignLeft">
+       <item>
         <widget class="QFrame" name="leftFrame">
          <property name="frameShape">
           <enum>QFrame::StyledPanel</enum>
@@ -93,7 +93,7 @@ QPushButton{
           <property name="topMargin">
            <number>9</number>
           </property>
-          <item alignment="Qt::AlignLeft">
+          <item>
            <widget class="QPushButton" name="leftMenuBtn">
             <property name="enabled">
              <bool>false</bool>
@@ -116,7 +116,7 @@ QPushButton{
             </property>
            </widget>
           </item>
-          <item alignment="Qt::AlignLeft">
+          <item>
            <widget class="QLabel" name="label">
             <property name="font">
              <font>
@@ -188,7 +188,7 @@ QPushButton{
          </layout>
         </widget>
        </item>
-       <item alignment="Qt::AlignRight">
+       <item>
         <widget class="QFrame" name="rightFrame">
          <property name="frameShape">
           <enum>QFrame::StyledPanel</enum>
@@ -199,6 +199,9 @@ QPushButton{
          <layout class="QHBoxLayout" name="horizontalLayout_3">
           <item>
            <widget class="QPushButton" name="begin">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="cursor">
              <cursorShape>PointingHandCursor</cursorShape>
             </property>
@@ -300,7 +303,7 @@ QPushButton{
       </layout>
      </widget>
     </item>
-    <item>
+    <item row="1" column="0">
      <widget class="QWidget" name="mainBody" native="true">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
@@ -390,7 +393,7 @@ QPushButton{
                 <item>
                  <widget class="QPushButton" name="playerBtn">
                   <property name="cursor">
-                   <cursorShape>OpenHandCursor</cursorShape>
+                   <cursorShape>PointingHandCursor</cursorShape>
                   </property>
                   <property name="text">
                    <string>Player</string>
@@ -427,7 +430,7 @@ QPushButton{
                    <cursorShape>PointingHandCursor</cursorShape>
                   </property>
                   <property name="text">
-                   <string>HotMap</string>
+                   <string>HeatMap</string>
                   </property>
                   <property name="icon">
                    <iconset resource="QSS/QSS_Resources.qrc">
@@ -436,7 +439,7 @@ QPushButton{
                  </widget>
                 </item>
                 <item>
-                 <widget class="QPushButton" name="hotMapRouteBtn">
+                 <widget class="QPushButton" name="tacleFixationBtn">
                   <property name="enabled">
                    <bool>false</bool>
                   </property>
@@ -444,7 +447,7 @@ QPushButton{
                    <cursorShape>PointingHandCursor</cursorShape>
                   </property>
                   <property name="text">
-                   <string>HotMapRoute</string>
+                   <string>TacleFixation</string>
                   </property>
                   <property name="icon">
                    <iconset resource="QSS/QSS_Resources.qrc">
@@ -456,12 +459,15 @@ QPushButton{
               </widget>
              </item>
              <item>
-              <widget class="QPushButton" name="tacicleFixationBtn">
+              <widget class="QPushButton" name="tacleFixationRouteBtn">
                <property name="enabled">
                 <bool>false</bool>
                </property>
+               <property name="cursor">
+                <cursorShape>PointingHandCursor</cursorShape>
+               </property>
                <property name="text">
-                <string>TacicleFixation</string>
+                <string>TacleFixationRoute</string>
                </property>
                <property name="icon">
                 <iconset resource="QSS/QSS_Resources.qrc">
@@ -561,6 +567,9 @@ QPushButton{
               </widget>
              </item>
             </layout>
+            <zorder>frame</zorder>
+            <zorder>frame_2</zorder>
+            <zorder>tacleFixationRouteBtn</zorder>
            </widget>
           </item>
          </layout>
@@ -571,13 +580,19 @@ QPushButton{
          <layout class="QVBoxLayout" name="verticalLayout_2">
           <item>
            <widget class="QStackedWidget" name="mainPages">
+            <property name="baseSize">
+             <size>
+              <width>2</width>
+              <height>0</height>
+             </size>
+            </property>
             <property name="font">
              <font>
               <pointsize>12</pointsize>
              </font>
             </property>
             <property name="currentIndex">
-             <number>0</number>
+             <number>5</number>
             </property>
             <widget class="QWidget" name="playerPage">
              <layout class="QGridLayout" name="gridLayout">
@@ -649,6 +664,9 @@ QPushButton{
                     </property>
                     <item>
                      <widget class="QPushButton" name="already">
+                      <property name="cursor">
+                       <cursorShape>PointingHandCursor</cursorShape>
+                      </property>
                       <property name="text">
                        <string>Already</string>
                       </property>
@@ -656,35 +674,40 @@ QPushButton{
                     </item>
                     <item>
                      <widget class="QPushButton" name="hot">
+                      <property name="cursor">
+                       <cursorShape>PointingHandCursor</cursorShape>
+                      </property>
                       <property name="text">
-                       <string>Hot</string>
+                       <string>Heat</string>
                       </property>
                      </widget>
                     </item>
                     <item>
-                     <widget class="QPushButton" name="hotRoute">
+                     <widget class="QPushButton" name="tacle">
                       <property name="baseSize">
                        <size>
                         <width>100</width>
                         <height>20</height>
                        </size>
                       </property>
-                      <property name="text">
-                       <string>HorRoute</string>
+                      <property name="cursor">
+                       <cursorShape>PointingHandCursor</cursorShape>
                       </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QPushButton" name="tacle">
                       <property name="text">
                        <string>Tacle</string>
                       </property>
                      </widget>
                     </item>
                     <item>
-                     <widget class="QPushButton" name="compare">
+                     <widget class="QPushButton" name="tacleRoute">
+                      <property name="enabled">
+                       <bool>false</bool>
+                      </property>
+                      <property name="cursor">
+                       <cursorShape>PointingHandCursor</cursorShape>
+                      </property>
                       <property name="text">
-                       <string>Compare</string>
+                       <string>TacleRoute</string>
                       </property>
                      </widget>
                     </item>
@@ -728,7 +751,18 @@ QPushButton{
               </item>
              </layout>
             </widget>
-            <widget class="QWidget" name="hotMapRoutePage">
+            <widget class="QWidget" name="tacleFixationPage">
+             <layout class="QVBoxLayout" name="verticalLayout_16">
+              <item>
+               <widget class="QLabel" name="tacleMap">
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+            <widget class="QWidget" name="tacleFixationRoutePage">
              <layout class="QVBoxLayout" name="verticalLayout_12">
               <item>
                <widget class="QLabel" name="hotMapRoute">
@@ -740,99 +774,152 @@ QPushButton{
              </layout>
             </widget>
             <widget class="QWidget" name="modelComparePage">
-             <widget class="QFrame" name="frame_9">
-              <property name="geometry">
-               <rect>
-                <x>50</x>
-                <y>100</y>
-                <width>168</width>
-                <height>66</height>
-               </rect>
-              </property>
-              <property name="frameShape">
-               <enum>QFrame::StyledPanel</enum>
-              </property>
-              <property name="frameShadow">
-               <enum>QFrame::Raised</enum>
-              </property>
-              <layout class="QHBoxLayout" name="horizontalLayout_9">
-               <item>
-                <widget class="QFrame" name="frame_10">
-                 <property name="frameShape">
-                  <enum>QFrame::StyledPanel</enum>
-                 </property>
-                 <property name="frameShadow">
-                  <enum>QFrame::Raised</enum>
-                 </property>
-                 <layout class="QVBoxLayout" name="verticalLayout_16">
-                  <item>
-                   <widget class="QWidget" name="chartTime" native="true"/>
-                  </item>
-                  <item>
-                   <widget class="QLabel" name="tacleForColour">
-                    <property name="text">
-                     <string>TextLabel</string>
+             <layout class="QHBoxLayout" name="horizontalLayout_9">
+              <item>
+               <widget class="QFrame" name="frame_8">
+                <property name="frameShape">
+                 <enum>QFrame::StyledPanel</enum>
+                </property>
+                <property name="frameShadow">
+                 <enum>QFrame::Raised</enum>
+                </property>
+                <layout class="QGridLayout" name="gridLayout_4">
+                 <item row="0" column="2">
+                  <widget class="QFrame" name="frame_10">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="frameShape">
+                    <enum>QFrame::StyledPanel</enum>
+                   </property>
+                   <property name="frameShadow">
+                    <enum>QFrame::Raised</enum>
+                   </property>
+                   <layout class="QVBoxLayout" name="verticalLayout">
+                    <property name="spacing">
+                     <number>0</number>
                     </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </widget>
-               </item>
-               <item>
-                <widget class="QFrame" name="frame_11">
-                 <property name="frameShape">
-                  <enum>QFrame::StyledPanel</enum>
-                 </property>
-                 <property name="frameShadow">
-                  <enum>QFrame::Raised</enum>
-                 </property>
-                 <layout class="QVBoxLayout" name="verticalLayout_17">
-                  <item>
-                   <widget class="QWidget" name="chartCorrect" native="true"/>
-                  </item>
-                  <item>
-                   <widget class="QLabel" name="tacleForMedia">
-                    <property name="text">
-                     <string>TextLabel</string>
+                    <property name="leftMargin">
+                     <number>0</number>
                     </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-            </widget>
-            <widget class="QWidget" name="tacicleFixationPage">
-             <widget class="QFrame" name="frame_8">
-              <property name="geometry">
-               <rect>
-                <x>130</x>
-                <y>140</y>
-                <width>120</width>
-                <height>80</height>
-               </rect>
-              </property>
-              <property name="frameShape">
-               <enum>QFrame::StyledPanel</enum>
-              </property>
-              <property name="frameShadow">
-               <enum>QFrame::Raised</enum>
-              </property>
-              <widget class="QLabel" name="tacleMap">
-               <property name="geometry">
-                <rect>
-                 <x>50</x>
-                 <y>40</y>
-                 <width>54</width>
-                 <height>12</height>
-                </rect>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-              </widget>
-             </widget>
+                    <property name="topMargin">
+                     <number>0</number>
+                    </property>
+                    <property name="rightMargin">
+                     <number>0</number>
+                    </property>
+                    <property name="bottomMargin">
+                     <number>0</number>
+                    </property>
+                    <item>
+                     <widget class="QLabel" name="label_2">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="text">
+                       <string>MediaPipe</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLabel" name="firstModelOutcome">
+                      <property name="text">
+                       <string/>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QFrame" name="compareRate">
+                   <property name="frameShape">
+                    <enum>QFrame::StyledPanel</enum>
+                   </property>
+                   <property name="frameShadow">
+                    <enum>QFrame::Raised</enum>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="2">
+                  <widget class="QFrame" name="compareTime">
+                   <property name="frameShape">
+                    <enum>QFrame::StyledPanel</enum>
+                   </property>
+                   <property name="frameShadow">
+                    <enum>QFrame::Raised</enum>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="0">
+                  <widget class="QFrame" name="frame_9">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="frameShape">
+                    <enum>QFrame::StyledPanel</enum>
+                   </property>
+                   <property name="frameShadow">
+                    <enum>QFrame::Raised</enum>
+                   </property>
+                   <layout class="QVBoxLayout" name="verticalLayout_17">
+                    <property name="spacing">
+                     <number>0</number>
+                    </property>
+                    <property name="leftMargin">
+                     <number>0</number>
+                    </property>
+                    <property name="topMargin">
+                     <number>0</number>
+                    </property>
+                    <property name="rightMargin">
+                     <number>0</number>
+                    </property>
+                    <property name="bottomMargin">
+                     <number>0</number>
+                    </property>
+                    <item>
+                     <widget class="QLabel" name="label_3">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="text">
+                       <string>ColorDetect</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLabel" name="secondModelOutcome">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="text">
+                       <string/>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+             </layout>
             </widget>
             <widget class="QWidget" name="handSettingPage">
              <layout class="QVBoxLayout" name="verticalLayout_9">
@@ -1200,11 +1287,11 @@ QPushButton{
  </resources>
  <connections/>
  <buttongroups>
-  <buttongroup name="modleGroup"/>
   <buttongroup name="fingerGroup">
    <property name="exclusive">
     <bool>false</bool>
    </property>
   </buttongroup>
+  <buttongroup name="modleGroup"/>
  </buttongroups>
 </ui>

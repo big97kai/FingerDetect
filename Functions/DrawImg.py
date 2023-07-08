@@ -7,17 +7,15 @@
 import cv2
 
 COLOUR_ROUTE = (255, 0, 0)
-RADIOS_ROUTE = 10
-
+RADIOS_ROUTE = 2
 
 class DrawImg:
     """
             the base class for all drawing image incling save files
     """
 
-    def __init__(self, drawList=None, frameSize=None, route=None, needToSave=None, outImg=None, fileName=None, filePath=None):
+    def __init__(self, drawList=None, frameSize=None, route=None, fileName=None):
         self.fileName = fileName
-        self.needToSave = needToSave
         self.drawList = drawList
         self.frameSize = frameSize
         self.route = route
@@ -39,8 +37,9 @@ class DrawImg:
 
     def saveImg(self, filePath, img):
         # Save the image to the specified file location
+
+        filePath = filePath + '//' + self.fileName
         cv2.imwrite(filePath, img)
-        pass
 
     def drawRoute(self, img, before_point, route_list, permission):
         """

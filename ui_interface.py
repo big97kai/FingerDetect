@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'interface.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.4.2
+## Created by: Qt User Interface Compiler version 6.4.3
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -27,7 +27,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(797, 471)
+        MainWindow.resize(913, 575)
         MainWindow.setStyleSheet(u"*{\n"
 "	border: none;\n"
 "	background-color: transparent;\n"
@@ -61,9 +61,9 @@ class Ui_MainWindow(object):
 "}")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
-        self.verticalLayout = QVBoxLayout(self.centralwidget)
-        self.verticalLayout.setObjectName(u"verticalLayout")
-        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
+        self.gridLayout_3 = QGridLayout(self.centralwidget)
+        self.gridLayout_3.setObjectName(u"gridLayout_3")
+        self.gridLayout_3.setContentsMargins(0, 0, 0, 0)
         self.header = QWidget(self.centralwidget)
         self.header.setObjectName(u"header")
         self.horizontalLayout = QHBoxLayout(self.header)
@@ -86,7 +86,7 @@ class Ui_MainWindow(object):
         self.leftMenuBtn.setIcon(icon)
         self.leftMenuBtn.setIconSize(QSize(24, 24))
 
-        self.horizontalLayout_4.addWidget(self.leftMenuBtn, 0, Qt.AlignLeft)
+        self.horizontalLayout_4.addWidget(self.leftMenuBtn)
 
         self.label = QLabel(self.leftFrame)
         self.label.setObjectName(u"label")
@@ -96,10 +96,10 @@ class Ui_MainWindow(object):
         font.setBold(True)
         self.label.setFont(font)
 
-        self.horizontalLayout_4.addWidget(self.label, 0, Qt.AlignLeft)
+        self.horizontalLayout_4.addWidget(self.label)
 
 
-        self.horizontalLayout.addWidget(self.leftFrame, 0, Qt.AlignLeft)
+        self.horizontalLayout.addWidget(self.leftFrame)
 
         self.volumeFrame = QFrame(self.header)
         self.volumeFrame.setObjectName(u"volumeFrame")
@@ -148,6 +148,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
         self.begin = QPushButton(self.rightFrame)
         self.begin.setObjectName(u"begin")
+        self.begin.setEnabled(False)
         self.begin.setCursor(QCursor(Qt.PointingHandCursor))
         icon1 = QIcon()
         icon1.addFile(u":/icons/Icons/instagram.png", QSize(), QIcon.Normal, QIcon.Off)
@@ -195,10 +196,10 @@ class Ui_MainWindow(object):
         self.horizontalLayout_3.addWidget(self.files)
 
 
-        self.horizontalLayout.addWidget(self.rightFrame, 0, Qt.AlignRight)
+        self.horizontalLayout.addWidget(self.rightFrame)
 
 
-        self.verticalLayout.addWidget(self.header)
+        self.gridLayout_3.addWidget(self.header, 0, 0, 1, 1)
 
         self.mainBody = QWidget(self.centralwidget)
         self.mainBody.setObjectName(u"mainBody")
@@ -234,7 +235,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_5.setContentsMargins(0, 0, 0, 0)
         self.playerBtn = QPushButton(self.frame)
         self.playerBtn.setObjectName(u"playerBtn")
-        self.playerBtn.setCursor(QCursor(Qt.OpenHandCursor))
+        self.playerBtn.setCursor(QCursor(Qt.PointingHandCursor))
         icon5 = QIcon()
         icon5.addFile(u":/icons/Icons/play-circle.png", QSize(), QIcon.Normal, QIcon.Off)
         self.playerBtn.setIcon(icon5)
@@ -261,27 +262,28 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_5.addWidget(self.hotMapBtn)
 
-        self.hotMapRouteBtn = QPushButton(self.frame)
-        self.hotMapRouteBtn.setObjectName(u"hotMapRouteBtn")
-        self.hotMapRouteBtn.setEnabled(False)
-        self.hotMapRouteBtn.setCursor(QCursor(Qt.PointingHandCursor))
+        self.tacleFixationBtn = QPushButton(self.frame)
+        self.tacleFixationBtn.setObjectName(u"tacleFixationBtn")
+        self.tacleFixationBtn.setEnabled(False)
+        self.tacleFixationBtn.setCursor(QCursor(Qt.PointingHandCursor))
         icon8 = QIcon()
         icon8.addFile(u":/icons/Icons/crop.png", QSize(), QIcon.Normal, QIcon.Off)
-        self.hotMapRouteBtn.setIcon(icon8)
+        self.tacleFixationBtn.setIcon(icon8)
 
-        self.verticalLayout_5.addWidget(self.hotMapRouteBtn)
+        self.verticalLayout_5.addWidget(self.tacleFixationBtn)
 
 
         self.verticalLayout_4.addWidget(self.frame)
 
-        self.tacicleFixationBtn = QPushButton(self.widget)
-        self.tacicleFixationBtn.setObjectName(u"tacicleFixationBtn")
-        self.tacicleFixationBtn.setEnabled(False)
+        self.tacleFixationRouteBtn = QPushButton(self.widget)
+        self.tacleFixationRouteBtn.setObjectName(u"tacleFixationRouteBtn")
+        self.tacleFixationRouteBtn.setEnabled(False)
+        self.tacleFixationRouteBtn.setCursor(QCursor(Qt.PointingHandCursor))
         icon9 = QIcon()
         icon9.addFile(u":/icons/Icons/airplay.png", QSize(), QIcon.Normal, QIcon.Off)
-        self.tacicleFixationBtn.setIcon(icon9)
+        self.tacleFixationRouteBtn.setIcon(icon9)
 
-        self.verticalLayout_4.addWidget(self.tacicleFixationBtn)
+        self.verticalLayout_4.addWidget(self.tacleFixationRouteBtn)
 
         self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
@@ -328,6 +330,9 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_4.addWidget(self.frame_2)
 
+        self.frame.raise_()
+        self.frame_2.raise_()
+        self.tacleFixationRouteBtn.raise_()
 
         self.verticalLayout_3.addWidget(self.widget)
 
@@ -340,6 +345,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.mainPages = QStackedWidget(self.mainBodyContent)
         self.mainPages.setObjectName(u"mainPages")
+        self.mainPages.setBaseSize(QSize(2, 0))
         font1 = QFont()
         font1.setPointSize(12)
         self.mainPages.setFont(font1)
@@ -372,29 +378,29 @@ class Ui_MainWindow(object):
         self.horizontalLayout_6.setContentsMargins(0, 0, 0, 0)
         self.already = QPushButton(self.frame_5)
         self.already.setObjectName(u"already")
+        self.already.setCursor(QCursor(Qt.PointingHandCursor))
 
         self.horizontalLayout_6.addWidget(self.already)
 
         self.hot = QPushButton(self.frame_5)
         self.hot.setObjectName(u"hot")
+        self.hot.setCursor(QCursor(Qt.PointingHandCursor))
 
         self.horizontalLayout_6.addWidget(self.hot)
 
-        self.hotRoute = QPushButton(self.frame_5)
-        self.hotRoute.setObjectName(u"hotRoute")
-        self.hotRoute.setBaseSize(QSize(100, 20))
-
-        self.horizontalLayout_6.addWidget(self.hotRoute)
-
         self.tacle = QPushButton(self.frame_5)
         self.tacle.setObjectName(u"tacle")
+        self.tacle.setBaseSize(QSize(100, 20))
+        self.tacle.setCursor(QCursor(Qt.PointingHandCursor))
 
         self.horizontalLayout_6.addWidget(self.tacle)
 
-        self.compare = QPushButton(self.frame_5)
-        self.compare.setObjectName(u"compare")
+        self.tacleRoute = QPushButton(self.frame_5)
+        self.tacleRoute.setObjectName(u"tacleRoute")
+        self.tacleRoute.setEnabled(False)
+        self.tacleRoute.setCursor(QCursor(Qt.PointingHandCursor))
 
-        self.horizontalLayout_6.addWidget(self.compare)
+        self.horizontalLayout_6.addWidget(self.tacleRoute)
 
 
         self.verticalLayout_13.addWidget(self.frame_5)
@@ -430,75 +436,112 @@ class Ui_MainWindow(object):
         self.verticalLayout_11.addWidget(self.hotMap)
 
         self.mainPages.addWidget(self.hotMapPage)
-        self.hotMapRoutePage = QWidget()
-        self.hotMapRoutePage.setObjectName(u"hotMapRoutePage")
-        self.verticalLayout_12 = QVBoxLayout(self.hotMapRoutePage)
+        self.tacleFixationPage = QWidget()
+        self.tacleFixationPage.setObjectName(u"tacleFixationPage")
+        self.verticalLayout_16 = QVBoxLayout(self.tacleFixationPage)
+        self.verticalLayout_16.setObjectName(u"verticalLayout_16")
+        self.tacleMap = QLabel(self.tacleFixationPage)
+        self.tacleMap.setObjectName(u"tacleMap")
+
+        self.verticalLayout_16.addWidget(self.tacleMap)
+
+        self.mainPages.addWidget(self.tacleFixationPage)
+        self.tacleFixationRoutePage = QWidget()
+        self.tacleFixationRoutePage.setObjectName(u"tacleFixationRoutePage")
+        self.verticalLayout_12 = QVBoxLayout(self.tacleFixationRoutePage)
         self.verticalLayout_12.setObjectName(u"verticalLayout_12")
-        self.hotMapRoute = QLabel(self.hotMapRoutePage)
+        self.hotMapRoute = QLabel(self.tacleFixationRoutePage)
         self.hotMapRoute.setObjectName(u"hotMapRoute")
 
         self.verticalLayout_12.addWidget(self.hotMapRoute)
 
-        self.mainPages.addWidget(self.hotMapRoutePage)
+        self.mainPages.addWidget(self.tacleFixationRoutePage)
         self.modelComparePage = QWidget()
         self.modelComparePage.setObjectName(u"modelComparePage")
-        self.frame_9 = QFrame(self.modelComparePage)
-        self.frame_9.setObjectName(u"frame_9")
-        self.frame_9.setGeometry(QRect(50, 100, 168, 66))
-        self.frame_9.setFrameShape(QFrame.StyledPanel)
-        self.frame_9.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_9 = QHBoxLayout(self.frame_9)
+        self.horizontalLayout_9 = QHBoxLayout(self.modelComparePage)
         self.horizontalLayout_9.setObjectName(u"horizontalLayout_9")
-        self.frame_10 = QFrame(self.frame_9)
-        self.frame_10.setObjectName(u"frame_10")
-        self.frame_10.setFrameShape(QFrame.StyledPanel)
-        self.frame_10.setFrameShadow(QFrame.Raised)
-        self.verticalLayout_16 = QVBoxLayout(self.frame_10)
-        self.verticalLayout_16.setObjectName(u"verticalLayout_16")
-        self.chartTime = QWidget(self.frame_10)
-        self.chartTime.setObjectName(u"chartTime")
-
-        self.verticalLayout_16.addWidget(self.chartTime)
-
-        self.tacleForColour = QLabel(self.frame_10)
-        self.tacleForColour.setObjectName(u"tacleForColour")
-
-        self.verticalLayout_16.addWidget(self.tacleForColour)
-
-
-        self.horizontalLayout_9.addWidget(self.frame_10)
-
-        self.frame_11 = QFrame(self.frame_9)
-        self.frame_11.setObjectName(u"frame_11")
-        self.frame_11.setFrameShape(QFrame.StyledPanel)
-        self.frame_11.setFrameShadow(QFrame.Raised)
-        self.verticalLayout_17 = QVBoxLayout(self.frame_11)
-        self.verticalLayout_17.setObjectName(u"verticalLayout_17")
-        self.chartCorrect = QWidget(self.frame_11)
-        self.chartCorrect.setObjectName(u"chartCorrect")
-
-        self.verticalLayout_17.addWidget(self.chartCorrect)
-
-        self.tacleForMedia = QLabel(self.frame_11)
-        self.tacleForMedia.setObjectName(u"tacleForMedia")
-
-        self.verticalLayout_17.addWidget(self.tacleForMedia)
-
-
-        self.horizontalLayout_9.addWidget(self.frame_11)
-
-        self.mainPages.addWidget(self.modelComparePage)
-        self.tacicleFixationPage = QWidget()
-        self.tacicleFixationPage.setObjectName(u"tacicleFixationPage")
-        self.frame_8 = QFrame(self.tacicleFixationPage)
+        self.frame_8 = QFrame(self.modelComparePage)
         self.frame_8.setObjectName(u"frame_8")
-        self.frame_8.setGeometry(QRect(130, 140, 120, 80))
         self.frame_8.setFrameShape(QFrame.StyledPanel)
         self.frame_8.setFrameShadow(QFrame.Raised)
-        self.tacleMap = QLabel(self.frame_8)
-        self.tacleMap.setObjectName(u"tacleMap")
-        self.tacleMap.setGeometry(QRect(50, 40, 54, 12))
-        self.mainPages.addWidget(self.tacicleFixationPage)
+        self.gridLayout_4 = QGridLayout(self.frame_8)
+        self.gridLayout_4.setObjectName(u"gridLayout_4")
+        self.frame_10 = QFrame(self.frame_8)
+        self.frame_10.setObjectName(u"frame_10")
+        sizePolicy.setHeightForWidth(self.frame_10.sizePolicy().hasHeightForWidth())
+        self.frame_10.setSizePolicy(sizePolicy)
+        self.frame_10.setFrameShape(QFrame.StyledPanel)
+        self.frame_10.setFrameShadow(QFrame.Raised)
+        self.verticalLayout = QVBoxLayout(self.frame_10)
+        self.verticalLayout.setSpacing(0)
+        self.verticalLayout.setObjectName(u"verticalLayout")
+        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
+        self.label_2 = QLabel(self.frame_10)
+        self.label_2.setObjectName(u"label_2")
+        sizePolicy2 = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
+        sizePolicy2.setHorizontalStretch(0)
+        sizePolicy2.setVerticalStretch(0)
+        sizePolicy2.setHeightForWidth(self.label_2.sizePolicy().hasHeightForWidth())
+        self.label_2.setSizePolicy(sizePolicy2)
+
+        self.verticalLayout.addWidget(self.label_2)
+
+        self.firstModelOutcome = QLabel(self.frame_10)
+        self.firstModelOutcome.setObjectName(u"firstModelOutcome")
+
+        self.verticalLayout.addWidget(self.firstModelOutcome)
+
+
+        self.gridLayout_4.addWidget(self.frame_10, 0, 2, 1, 1)
+
+        self.compareRate = QFrame(self.frame_8)
+        self.compareRate.setObjectName(u"compareRate")
+        self.compareRate.setFrameShape(QFrame.StyledPanel)
+        self.compareRate.setFrameShadow(QFrame.Raised)
+
+        self.gridLayout_4.addWidget(self.compareRate, 1, 0, 1, 1)
+
+        self.compareTime = QFrame(self.frame_8)
+        self.compareTime.setObjectName(u"compareTime")
+        self.compareTime.setFrameShape(QFrame.StyledPanel)
+        self.compareTime.setFrameShadow(QFrame.Raised)
+
+        self.gridLayout_4.addWidget(self.compareTime, 1, 2, 1, 1)
+
+        self.frame_9 = QFrame(self.frame_8)
+        self.frame_9.setObjectName(u"frame_9")
+        sizePolicy.setHeightForWidth(self.frame_9.sizePolicy().hasHeightForWidth())
+        self.frame_9.setSizePolicy(sizePolicy)
+        self.frame_9.setFrameShape(QFrame.StyledPanel)
+        self.frame_9.setFrameShadow(QFrame.Raised)
+        self.verticalLayout_17 = QVBoxLayout(self.frame_9)
+        self.verticalLayout_17.setSpacing(0)
+        self.verticalLayout_17.setObjectName(u"verticalLayout_17")
+        self.verticalLayout_17.setContentsMargins(0, 0, 0, 0)
+        self.label_3 = QLabel(self.frame_9)
+        self.label_3.setObjectName(u"label_3")
+        sizePolicy2.setHeightForWidth(self.label_3.sizePolicy().hasHeightForWidth())
+        self.label_3.setSizePolicy(sizePolicy2)
+
+        self.verticalLayout_17.addWidget(self.label_3)
+
+        self.secondModelOutcome = QLabel(self.frame_9)
+        self.secondModelOutcome.setObjectName(u"secondModelOutcome")
+        sizePolicy3 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        sizePolicy3.setHorizontalStretch(0)
+        sizePolicy3.setVerticalStretch(0)
+        sizePolicy3.setHeightForWidth(self.secondModelOutcome.sizePolicy().hasHeightForWidth())
+        self.secondModelOutcome.setSizePolicy(sizePolicy3)
+
+        self.verticalLayout_17.addWidget(self.secondModelOutcome)
+
+
+        self.gridLayout_4.addWidget(self.frame_9, 0, 0, 1, 1)
+
+
+        self.horizontalLayout_9.addWidget(self.frame_8)
+
+        self.mainPages.addWidget(self.modelComparePage)
         self.handSettingPage = QWidget()
         self.handSettingPage.setObjectName(u"handSettingPage")
         self.verticalLayout_9 = QVBoxLayout(self.handSettingPage)
@@ -653,9 +696,6 @@ class Ui_MainWindow(object):
         self.skipBtn = QPushButton(self.frame_7)
         self.skipBtn.setObjectName(u"skipBtn")
         self.skipBtn.setEnabled(False)
-        sizePolicy2 = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
-        sizePolicy2.setHorizontalStretch(0)
-        sizePolicy2.setVerticalStretch(0)
         sizePolicy2.setHeightForWidth(self.skipBtn.sizePolicy().hasHeightForWidth())
         self.skipBtn.setSizePolicy(sizePolicy2)
         self.skipBtn.setMinimumSize(QSize(0, 30))
@@ -684,11 +724,11 @@ class Ui_MainWindow(object):
         self.verticalLayout_18.setObjectName(u"verticalLayout_18")
         self.frontMap = QLabel(self.frame_4)
         self.frontMap.setObjectName(u"frontMap")
-        sizePolicy3 = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-        sizePolicy3.setHorizontalStretch(0)
-        sizePolicy3.setVerticalStretch(0)
-        sizePolicy3.setHeightForWidth(self.frontMap.sizePolicy().hasHeightForWidth())
-        self.frontMap.setSizePolicy(sizePolicy3)
+        sizePolicy4 = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        sizePolicy4.setHorizontalStretch(0)
+        sizePolicy4.setVerticalStretch(0)
+        sizePolicy4.setHeightForWidth(self.frontMap.sizePolicy().hasHeightForWidth())
+        self.frontMap.setSizePolicy(sizePolicy4)
         self.frontMap.setCursor(QCursor(Qt.CrossCursor))
         self.frontMap.setMouseTracking(True)
 
@@ -735,14 +775,14 @@ class Ui_MainWindow(object):
         self.horizontalLayout_2.addWidget(self.rightMenu)
 
 
-        self.verticalLayout.addWidget(self.mainBody)
+        self.gridLayout_3.addWidget(self.mainBody, 1, 0, 1, 1)
 
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
 
         self.files.setDefault(False)
-        self.mainPages.setCurrentIndex(0)
+        self.mainPages.setCurrentIndex(5)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -765,23 +805,24 @@ class Ui_MainWindow(object):
         self.files.setText("")
         self.playerBtn.setText(QCoreApplication.translate("MainWindow", u"Player", None))
         self.alreadyMapBtn.setText(QCoreApplication.translate("MainWindow", u"AlreadyMap", None))
-        self.hotMapBtn.setText(QCoreApplication.translate("MainWindow", u"HotMap", None))
-        self.hotMapRouteBtn.setText(QCoreApplication.translate("MainWindow", u"HotMapRoute", None))
-        self.tacicleFixationBtn.setText(QCoreApplication.translate("MainWindow", u"TacicleFixation", None))
+        self.hotMapBtn.setText(QCoreApplication.translate("MainWindow", u"HeatMap", None))
+        self.tacleFixationBtn.setText(QCoreApplication.translate("MainWindow", u"TacleFixation", None))
+        self.tacleFixationRouteBtn.setText(QCoreApplication.translate("MainWindow", u"TacleFixationRoute", None))
         self.modelCompareBtn.setText(QCoreApplication.translate("MainWindow", u"ModelCompare", None))
         self.modelSettingBtn.setText(QCoreApplication.translate("MainWindow", u"ModelSetting", None))
         self.handSettingBtn.setText(QCoreApplication.translate("MainWindow", u"HandSetting", None))
         self.already.setText(QCoreApplication.translate("MainWindow", u"Already", None))
-        self.hot.setText(QCoreApplication.translate("MainWindow", u"Hot", None))
-        self.hotRoute.setText(QCoreApplication.translate("MainWindow", u"HorRoute", None))
+        self.hot.setText(QCoreApplication.translate("MainWindow", u"Heat", None))
         self.tacle.setText(QCoreApplication.translate("MainWindow", u"Tacle", None))
-        self.compare.setText(QCoreApplication.translate("MainWindow", u"Compare", None))
+        self.tacleRoute.setText(QCoreApplication.translate("MainWindow", u"TacleRoute", None))
         self.alreadyMap.setText("")
         self.hotMap.setText("")
-        self.hotMapRoute.setText("")
-        self.tacleForColour.setText(QCoreApplication.translate("MainWindow", u"TextLabel", None))
-        self.tacleForMedia.setText(QCoreApplication.translate("MainWindow", u"TextLabel", None))
         self.tacleMap.setText("")
+        self.hotMapRoute.setText("")
+        self.label_2.setText(QCoreApplication.translate("MainWindow", u"MediaPipe", None))
+        self.firstModelOutcome.setText("")
+        self.label_3.setText(QCoreApplication.translate("MainWindow", u"ColorDetect", None))
+        self.secondModelOutcome.setText("")
         self.left_1.setText(QCoreApplication.translate("MainWindow", u"left_1", None))
         self.left_2.setText(QCoreApplication.translate("MainWindow", u"left_2", None))
         self.left_3.setText(QCoreApplication.translate("MainWindow", u"left_3", None))
